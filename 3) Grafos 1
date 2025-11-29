@@ -1,0 +1,230 @@
+Criação de listas de adjacências de um grafo sem e com peso:
+
+const int MAXSZ = 1e3+5;
+int n,m;
+
+vector<int> adj[MAXSZ]
+
+void addEdge(int u, int v){
+adj[u].push_back(v);
+// adj[v].push_back(u); <-retirar comentário em grafos bidirecionados
+}
+
+-----------------------
+
+#define pii pair<int,int>
+const int MAXSZ = 1e3+5;
+int n,m;
+
+vector<pii> adj[MAXSZ]
+
+void addEdge(int u, int v, int w){
+adj[u].push_back({v,w});
+// adj[v].push_back({u,w}); <-retirar comentário em grafos bidirecionados
+}
+
+Percorrer um grid:
+
+const int dx[] = {1,0,0,-1};
+const int dy[] = {0,1,-1,0};
+
+bool valid(int x,int y){
+  return x >=0 && x < n && y >= 0 && y < m && grid[x][y] != '#';
+}
+
+void rec(int x, int y){
+grid[x][y] = '#';
+for(int d = 0; d < 4; d++){
+int ax = x+dx[d], ay = y + dy[d]
+if(!valid(ax,ay)) continue;
+rec(ax,ay);
+}
+}
+
+DFS:
+vector<int> adj[MAXN];
+bool vis[MAXN];
+
+void dfs(int u){
+vis[u] = true;
+for(int v: adj[u]){
+if(!vis[v] dfs(v);
+}
+}
+
+BFS(genérico):
+
+int dist[MAXN];
+
+void bfs(int b){
+memset(dist, -1, sizeof(dist));
+dist[b] = 0;
+queue<int> q;
+q.push(b);
+
+while(!q.empty()){
+int u = q.front(); q.pop();
+for(int v: adj[u]){
+if(dist[v] == -1){
+dist[v] = dist[u] +1;
+q.push(v);
+}
+}
+}
+}
+
+Bicoloridade:
+
+vector<vector<int>> adj;
+vector<bool> vis,color;
+
+bool dfs(int v){
+vis[v] = true;
+for(int u : adj[v]){
+if(!vis[u]){
+color[u] = !color[v];
+if(!dfs(u)) return false;
+}
+else if(color[v] == color[u]) return false;
+}
+return true;
+}
+
+Toposort: (Algoritmo de Kahn)
+vector<int> adj[MAXN]
+int deg[MAXN];
+int n;
+
+vector<int> toposort(vector<pii> &edges){
+  memset(deg, 0, sizeof(deg));
+
+  for(auto[u,v]:edges){
+  deg[v]++;
+  }
+
+  queue<int> q;
+  for(int i = 1; i<=n; i++{
+  if(deg[i] == 0) q.push(i);
+  }
+  vector<int> ord;
+  while(!q.empty()){
+  int u = q.front(); q.pop();
+  ord.push_back(u);
+  for(int v: adj[u]){
+  deg[v] --;
+  if(deg[v] == 0) q.push(v);
+  }
+  }
+  return ord;
+}
+
+BFS MULTISOURCE: Um grafo com K vértices marcados, diga a menor distancia de todos os vertices para um vertice K qualquer.
+No início da BFS, definir todas os vértices marcados como dist[i] = 0. E iniciar a fila de BFS com esses vértices. Assim "camadas" ao redor dos pontos se formam.
+
+Encontrar ciclos:
+bool vis[MAXN];
+vector<int> ciclo;
+
+int dfs(int atual, int anterior){
+  if(vis[atual]) return atual;
+  vis[atual] = true;
+
+  for(int nxt: adj[atual]){
+  if(nxt == anterior) continue;
+  int fim = dfs(nxt, atual);
+
+  if (fim == -2) return -2;
+  if (fim != -1) {
+  ciclo.push_back(atual);
+  if (atual == fim) return -2;
+  else return fim;
+  }
+  }
+  return -1;
+}
+
+TREE DIAMATER:
+De qualquer nó, usando BFS ou DFS, encontrar um nó mais distante, ele será A. De A, encontrar o nó mais distante, esse será B. Dist entre A e B é o diametro da árvore.
+using namespace std;
+
+const int MAXN = 100005;
+vector<int> adj[MAXN];
+int dist[MAXN];
+bool visitado[MAXN];
+
+pair<int, int> bfs(int start_node, int n) {
+    for(int i = 0; i <= n; i++) {
+        visitado[i] = false;
+        dist[i] = 0;
+    }
+
+    queue<int> q;
+    q.push(start_node);
+    visitado[start_node] = true;
+    dist[start_node] = 0;
+
+    int max_dist = 0;
+    int farthest_node = start_node;
+
+    while(!q.empty()) {
+        int u = q.front();
+        q.pop();
+        if(dist[u] > max_dist) {
+            max_dist = dist[u];
+            farthest_node = u;
+        }
+
+        for(int v : adj[u]) {
+            if(!visitado[v]) {
+                visitado[v] = true;
+                dist[v] = dist[u] + 1;
+                q.push(v);
+            }
+        }
+    }
+
+    return {farthest_node, max_dist};
+}
+
+int main() {
+    int n = 5;
+    adj[0].push_back(1); adj[1].push_back(0);
+    adj[0].push_back(2); adj[2].push_back(0);
+    adj[1].push_back(3); adj[3].push_back(1);
+    adj[1].push_back(4); adj[4].push_back(1);
+
+    pair<int, int> p1 = bfs(0, n);
+    int ponto_A = p1.first;
+
+    pair<int, int> p2 = bfs(ponto_A, n);
+    int diametro = p2.second;
+
+    cout << "Extremidade A do diametro: " << ponto_A << endl;
+    cout << "Extremidade B do diametro: " << p2.first << endl;
+    cout << "Tamanho do Diametro: " << diametro << endl;
+    return 0;
+}
+
+Comp. Conexos e Flood Fill: 
+int componente[MAXN];
+
+void dfs(int u, int comp){
+componente[u] = comp;
+for(int v: adj[u]){
+if(componente[v] == -1){
+dfs(v,comp);
+}
+}
+}
+
+void init(){
+memset(componente, -1, sizeof(componente));
+
+int num = 0;
+for(int i = 1; i <= n; i++){
+if(componente[i] == -1){
+num++;
+dfs(i,num);
+}
+}
+}
