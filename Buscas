@@ -1,0 +1,116 @@
+Busca Binária: NxLog(N) - 5e6
+Bool Binary_Search(int n, int x, int a[]){
+int left = 0;
+int right = n-1;
+while(left <= right){
+int mid = (left+right)/2
+if(a[mid) <x){
+left = mid+1
+} else if (a[mid]) > x){
+right = mid-1;
+} else{
+return true // existe e é o valor de a[mid]
+}
+}
+return false // nem está no container
+}
+
+Usado em funções monotonas:
+Se demoramos T segundos para fazer f(T) = k, e queremos fazer k, basta: calcular f(mid), ver se é < ou >, e repetir até achar o valor mínimo em que se produzimos k.
+
+Two Pointers: Achar maior quantidade de itens que soma é valida (<= S), tempo linear
+int l = 0;
+int sum = 0;
+int best = 0;
+
+for(int r = 0; r<n; r++){
+sum += a[r]
+while(sum > s){
+sum -= a[l]~;
+l++
+}
+best = max(best, r-l+1)
+}
+
+Sweep Line: O(NxQ), Saber sobre N intervalos e Q queries, quantos intervalos cada querie está dentro.
+vector<int> contador(MAXN+1,0);
+vector<int> prefixsum(MAXN+1,0);
+
+for(auto [l,r]:v){
+contador[l]++;
+contador[r]--
+}
+for(int i = 1; i<= MAXN; i++){
+  prefixsum[i] = contador[i] + prefixsum[i-1];
+}
+
+while(q--){
+int x;
+cin >> x;
+cout << prefixsum[x];
+}
+
+Compressão de Coordenadas:
+Porque podemos ter 1e9 coordenadas mas apenas cabem entre 1e5 - 1e6 valores no vetor.
+Retiramos duplicatas para apenas usar valores unicos:
+sort(v.begin(),v.end());
+v.erase(unique(v.begin(),v.end()), v.end());
+
+for(auto: [l,r]: events){
+  int pos1 = lower_bound(v.begin(),v.end(),l) - v.begin();
+  int pos2 = lower_bound(v.begin(),v.end(),r) - v.begin();
+}
+
+for(int i = 1; i <= sz; i++){
+prefixsum[i] = contador[i-1] + prefixsum[i-1];
+}
+
+while (q--){
+ll pos;
+cin >> pos;
+cout << prefixsum[(upper_bound(v.begin(),v.end(),pos)-v.begin())-1];
+}
+
+Busca Exaustiva:
+Quando constraints são pequenos, podem ser usados:
+O(N!) - N <= 11 - Permutações
+O(Nx2^N) - N <= 22 - Subconjuntos
+O(N^k) - N <= 464, K = 3 - Loops Aninhados (Achar uma tripla)
+O(K^N) - Depende de K e N - Backtracking Geral
+
+Permutações: 
+next_permutation, quando v está sorted, acha a proxima sequencia lexicografica. Retorna true se há proxima sequencia, false se estava na maior e não pode progredir.
+O(N) por chamada, O(N!) num loop do-While.
+
+vector<int> v = {1,2,3};
+sort(v.begin(),v.end());
+do{
+for(auto e: v) cout << e << ' ';
+cout << endl;
+} while (next_permutation(v.begin(), v.end()));
+
+Subconjuntos:
+Usando bitmasks para gerar todos os subconjuntos, testando se todas as combinação de conseguir ou nao um item.
+Ex.: Se i = 5 = 101(binario), então pegar itens 0 e 2.
+O(N x 2^N).
+
+for( int mask = 0; mask < (1 << n); mask++){
+for(int bit = 0; bit < n, bit++){
+if(mask & (1 <<(bit))){
+//  Bit no subconjunto
+}
+}
+}
+
+Loops Aninhados: O(N^K)
+Gerar todos os pares, triplas ,... como loops aninhados
+for(int i = 0; i < n; i++){
+for(int j = i+1; j<n; j++){
+for(int k= j+1; k<n; k++){
+//testar trio (i,j,k)
+}
+}
+}
+
+Backtracking - "Busca Inteligente"
+Vai por um caminho, encontra bifurcação, coloca um sinal que esse lugar é bifurcação, escolhe um dos caminhos, se chegar em um beco sem saída -> volta para o ultimo lugar sinalizado e testa proximo caminho dessa bifurcação
