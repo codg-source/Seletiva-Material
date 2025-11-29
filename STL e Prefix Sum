@@ -1,0 +1,58 @@
+Vector:
+push_back(valor)
+pop_back
+size
+empty
+
+String:
+substr(tamanho, pos)
+find(string)
+
+int n = stoi("123);
+string n_str = to_string(456);
+
+Map:
+m[n] = 1
+count(n)
+find(n)
+m[n]
+erase(n)
+multipam<int,int> ms
+insert({n,m)
+
+Set:
+insert(n)
+count(n)
+find(n)
+erase(n)
+
+Stack:
+push(valor)
+pop
+top
+
+Queue:
+push(valor)
+pop
+front
+
+Pair: <T,T>
+.first
+.second
+
+Tuple: <T, T, ... , T>
+
+Funções Gerais:
+sort(Pos1,Pos2)
+erase(Pos1,Pos2) -> erase(unique(...), pos2)
+binary_search(Pos1,Pos2, valor)
+lower_bound(Pos1,Pos2, valor)
+upper_bound(Pos1,Pos2, valor)
+accumulate(Pos1,Pos2, valor)
+reverse(Pos1, Pos2)
+min_element(Pos1,Pos2)
+max_element(Pos1,Pos2)
+next_permutation(Pos1,Pos2)
+
+Prefix Sum: Somar os valores de 1 até N para ter acesso total de qualquer i valor em O(1)
+Saber soma entre i e j: Prefixsum de J - Prefixsum de i
