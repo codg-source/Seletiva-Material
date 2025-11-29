@@ -1,0 +1,115 @@
+Algoritmo de Dijkstra: O(N+M log N)
+
+const int n = 1e5+10;
+vector<ll> dist(n+1, LLONG_MAX);
+vector<vector<tuple<ll,ll>>> adj(n+1);
+priority_queue<tuple<ll,ll>, vector<tuple<ll,ll>>, greater<tuple<ll,ll>>> pq; // pq onde o elemento do topo é o menor
+
+pq.push({0,1});
+dist[1] = 0;
+while(!pq.empty()){
+auto [d,v] = pq.top();
+pq.pop();
+
+if (d <= dist[v]){
+for(auto [u,w] : adj [v]){
+if(dist[u] > dist[v] + w){
+dist[u] = dist[v] + w;
+pq.push({dist[u], u);
+}
+}
+}
+}
+// Da pra inicializar de várias fontes
+
+Algoritmo Floyd-Warshall: O(N*M)
+Na K-ésima iteração gera o menor caminho entre os pares que passem por um subconjunto {1,2,...,K} (pode ser conjunto nulo)
+
+const int n = 300 + 10;
+vector<vector<ll>> dist(n+1, vector<ll>(n+1));
+//dist[i][j] = 0 com i = j.
+for(int k = 1; k <= n; k++){
+for(int u = 1; u <= n; u++{
+for(int v = 1; v <= n; v++){
+if((dist[u][k] != LLONG_MAX) && (dist[k][v] != LLONG_MAX)){
+dist[u][v] = min (dist[u][v], dist[u][k] + dist[k][v]);
+}
+}
+}
+}
+
+Algoritmo Bellman-Ford: O(N^3)
+vector<ll> dist(n, INF);
+dist[s] = 0;
+
+for(int rep = 0; rep < n-1; rep++){
+for(auto [u,v,w] : edges){
+dist[v] = min(dist[v], dist[u] + w);
+}
+}
+//ciclo negativo
+bool cicloNeg = false;
+for(auto [u,v,w] : edges){
+if(dist[v] > dist[u] + w){
+cicloNeg = true;
+}
+}
+
+Modelagem de Grafos:
+
+while(!pq.empty()){
+auto [d,v,c] = pq.top(); pq.pop();
+
+if(d <= dist[v][c]){
+for(auto [u,w] : adj[v]){
+if(dist[u][c] > dist[v][c] + w){
+dist[u][c] = dist[v][c] + w;
+pq.push({dist[u][c], u, c});
+
+if(c<10){ //c é arbitrário, exemplo: 10 oportunidades de dividir peso na metade
+if(dist[u][c+1] > dist[v][c] + (w/2)){
+  dist[u][c+1] = dist[v][c] + (w/2);
+  pq.push({dist[u][c+1], u, c+1});
+}
+}
+}
+}
+}
+}
+
+DSU:
+int pai[MAXN], sz[MAXN];
+
+int find(int u){
+if(u == pai[u]) return u;
+return pai[u] = find(pai[u]);
+}
+
+void join(int u, int v){
+u = find(u);
+v = find(v);
+if (u==v) return;
+if (sz[u] < sz[v]) swap(u,v);
+
+pai[v] = u;
+sz[u] += sz[v];
+}
+
+int main(){
+for(int u = 0; u < MAXN; u++){
+pai[u] = u;
+sz[u] = 1;
+}
+}
+
+MST:
+vector<tuple<int,int,int>> arestas;
+sort(arestas.begin(), arestas.end());
+
+ll = totalCost = 0;
+for(auto [cost, u, v] : arestas){
+if(find(u) != find(v))  {
+join(u,v);
+totalCost += cost;
+}
+}
