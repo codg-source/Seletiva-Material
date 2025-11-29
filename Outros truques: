@@ -1,0 +1,8 @@
+Impressão de floats com precisão definida:
+
+cout << setprecision(N) << numero_float;
+onde N é casas decimais + inteiras.
+
+using ll = long long;
+using pii = pair<int,int>;
+using vi = vector<int>;
