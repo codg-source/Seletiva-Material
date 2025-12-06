@@ -1,0 +1,110 @@
+Programação Dinâmica Generalizada:
+int algum_criterio(i, X): // seja i o indice atual e X o valor até aqui
+if i <= N: return 0
+if memo[i, X] != null: return memo[i, X]
+
+memo[i, X] = algum_criterio(i + 1, X) >> Se não escolher incluir o termo I
+if |A[i] - X| <= K: >> Condição para poder incluir proximo termo
+nans = algum_criterio(i + 1, A[i]) + A[i] >> Se incluir o termo I
+memo[i, X] = max(memo[i, X], nans)
+
+return memo[i, X]
+
+final_ans = max0 <= i < N(algum_criterio(i + 1, A[i]) + A[i])
+
+LIS (Longest Increasing Subsequence) - otimização gulosa com busca binária nlogn:
+// tails[i] guardará o menor valor final e possível de uma subsequência crescente de tamanho i+1
+// Com o objetivo de manter os valores neste vetor o menor o possível para aumentar as chances de extender a sequencia futuramente
+
+int solve(const vector<int>& numeros){
+  if(numeros.empty()) return 0;
+
+  vector<int> tails;
+  for(int x :numeros){
+auto it = lower_bound(tails.begin(), tails.end(), x);
+
+if(it == tails.end()){ // se lower_bound de x é o ultimo, então x é maior que todos os elementos
+tails.push_back(x);
+}else{ // se encontramos um elemento, ele é substituido por x: existe subsequencia que termina com o mesmo tamanho e com um numero menor que previamente pensado
+*it = x; 
+}
+  }
+return tails.size(); // retornamos o tamanho da LIS
+}
+
+LCS (Longest Common Subsequence) - n*m (tamanho das duas strings)
+vector<vector<int>> dp;
+string a; string b;
+
+int best(int i, int j){ // na primeira chamada são chamadas com tamanho da string (ou tamanho-1, depende de como voce interprete)
+if(i<0 or j<0) return 0;
+if(dp[i][j] != -1) return dp[i][j];
+
+dp[i][j] = 0;
+if(a[i] == b[j]){
+dp[i][j] = 1+ best(i-1, j-1); // se sao iguais, movemos na diagonal da matriz
+} else{
+dp[i][j] = max(best(i-1,j),best(i,j-1)); // se nao sao, vemos se subir ou ir para esquerda é melhor
+}
+return dp[i][j];
+}
+
+int solve();
+//ler strings a,b;
+dp = vector<vector<int>>(n,vector<int>(m, -1)); //inicialização de todos os pontos da matriz com -1
+valor int qlqr = best(tamanhoa, tamanhob);
+
+SUBSET SUM - Saber se existe subconjunto cuja soma é igual a T;
+bool solve(){
+int t;
+vector<int> a = {valores lidos};
+vector<bool> dp(t+1);
+dp[0] = true;
+
+for(int x: a){
+for(int i = t - x; i >=0; --i){
+if(dp[i]){ // vê se a soma do elemento i + x é valida, se for, marcamos true,
+dp[i+x] = true;
+}
+}
+}
+return dp[t];
+}
+
+KNAPSACK - Uma mochila que aguenta W, tens itens de peso w[i] com um valor v[i], qual melhor valor possível? O(n*W)
+int solve(){
+int n; int W;
+vector<int> w; vector<int> v; // todos esses são os valores a serem lidos
+
+vector<int> knapscak(W+1);
+for(int i = 0; i < n; ++i){
+for(int k = W - w[i]; k >= 0; --k){
+knapsack[k+w[i]] = max(knapsack[k+w[i], knapsack[k] + v[i]);
+}
+}
+return knapsack[W]; // aqui está o melhor valor possivel
+}
+
+COMO RECONSTRUIR A RESPOSTA:
+A ideia: ter algum container apropriado (vetor ou matriz) que guarda de onde aquela posição veio anteriormente. Exemplo de codigo: (nesse exemplo: queremos saber qual a maior soma até o canto inferior direito de uma matriz saindo de 0,0)
+
+dp[i] - Guarda o melhor valor para aquela posição
+rec[i] - Guarda de qual posição anterior veio o valor
+
+for(int u = 0; u < n; u++){
+  for(int v: adj[u]){
+ll cand = dp[u] + w[u][v];
+if(cand > dp[v]){
+dp[v] = cand;
+rec[v] = u;
+}
+  }
+}
+
+vector<int> caminho;
+int s = estado_final;
+while(s != estado_base){
+caminho.push_back(s);
+s = rec[s];
+}
+caminho.push_back(estado_base); // e depois fazer reverse desse array;
